@@ -1,0 +1,50 @@
+\documentclass[12pt,a4paper]{article}
+
+% Для XeLaTeX: шрифты задаются через fontspec
+\usepackage{fontspec}
+%\setmainfont{DejaVu Serif}        % или Liberation Serif, PT Serif
+%\setsansfont{DejaVu Sans}
+%\setmonofont{DejaVu Sans Mono}
+\setmainfont{Times New Roman}
+\setsansfont{Times New Roman}
+\setmonofont{Times New Roman}
+
+
+
+% Язык
+\usepackage[russian,english]{babel}
+
+% Математика
+\usepackage{amsmath,amssymb}
+
+% Код
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    language=Python,
+    showstringspaces=false,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red}
+}
+
+\title{Конспекты по Python}
+\author{HexWolfCoder}
+\date{\today}
+
+\begin{document}
+\maketitle
+\renewcommand{\contentsname}{Содержание}
+\tableofcontents
+
+\include{00-tools}
+%\include{01-basics}
+%\include{02-functions}
+
+\end{document}

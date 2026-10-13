@@ -218,3 +218,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#LaTeX
+
+# LaTeX вспомогательные файлы
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# Скомпилированный PDF (опционально)
+# *.pdf
+
+# Редакторы
+.vscode/
+.idea/
+*.swp
