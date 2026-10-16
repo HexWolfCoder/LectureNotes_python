@@ -1,6 +1,6 @@
 # Конспекты по Python
 
-![Build PDF](https://github.com/HexWolfCoder/python-notes/actions/workflows/build.yml/badge.svg)
+[![Build PDF](https://github.com/HexWolfCoder/LectureNotes_python/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/HexWolfCoder/LectureNotes_python/actions/workflows/build.yml)
 
 Цикл опорных конспектов по Python для начинающих.
 
