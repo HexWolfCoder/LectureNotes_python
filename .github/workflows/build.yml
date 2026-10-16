@@ -42,7 +42,7 @@ jobs:
           root_file: main.tex
           latexmk_use_xelatex: true
           latexmk_shell_escape: false
-          #extra_system_packages: "inkscape ghostscript"
+          extra_system_packages: "inkscape ghostscript font-liberation"
 
       # --- Выгрузка PDF как артефакта ---
       - name: Upload PDF
