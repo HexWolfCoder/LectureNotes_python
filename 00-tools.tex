@@ -42,17 +42,51 @@
   \label{fig:python-pipeline}
 \end{figure}
 
-
-\paragraph*{Интерпретатор}
-
-Исходный код \texttt{.py} компилируется в байт-код.
+\begin{warningbox2}
+\texttt{Интерпретатор} --- Исходный код \texttt{.py} компилируется в байт-код.
+\end{warningbox2}
 
 \subsubsection{REPL}
 
 \textbf{REPL = Read-Eval-Print Loop}. Это интерактивный режим интерпретатора.
 
 \begin{lstlisting}
-def main() -> None:
-    print("Hello")
+$ python3
+Python 3.12.0 (main, ...)
+>>> 2 + 2
+4
+>>> name = "world"
+>>> print(f"hello, {name}")
+hello, world
+>>> exit()
 \end{lstlisting}
 
+\textbf{Цикл:}
+\begin{itemize}
+\item Read — читает строку.
+\item Eval — вычисляет.
+\item Print — печатает результат.
+\item Loop — возвращается к началу.
+\end{itemize}
+
+\textbf{Зачем нужен:}
+\begin{itemize}
+\item Быстро проверить идею.
+\item Изучить поведение функции/метода.
+\item Отладка маленьких фрагментов.
+\item Прототипирование.
+\end{itemize}
+
+\textbf{Улучшенные REPL:}
+\begin{itemize}
+\item ipython — подсветка, автодополнение, ?, ??, \%timeit.
+\item bpython, ptpython.
+\item Jupyter Notebook — REPL в браузере с сохранением состояния и визуализацией.
+\end{itemize}
+
+\textbf{Что нужно понимать:}
+\begin{itemize}
+\item \textbf{REPL} — не для продакшена, а для экспериментов.
+\item В \textbf{REPL} переменные живут до выхода.
+\item  \textbf{\_} хранит последний результат.
+\end{itemize}
