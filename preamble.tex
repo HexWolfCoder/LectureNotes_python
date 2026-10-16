@@ -8,11 +8,11 @@
     \setsansfont{Times New Roman}
     \setmonofont{Courier New}
   }{
-    % TeX Gyre — метрически совместимые клоны Times/Arial/Courier,
-    % всегда доступны в TeX Live (включая минимальный Alpine-образ)
-    \setmainfont{TeX Gyre Termes}
-    \setsansfont{TeX Gyre Heros}
-    \setmonofont{TeX Gyre Cursor}
+    % Liberation — метрически совместим с Times, есть кириллица,
+    % ставится в CI через extra_system_packages: "font-liberation"
+    \setmainfont{Liberation Serif}
+    \setsansfont{Liberation Sans}
+    \setmonofont{Liberation Mono}
   }
 \else
   \PackageError{preamble}{This document requires XeLaTeX}{}
