@@ -1,0 +1,54 @@
+name: Build PDF
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - '**.tex'
+      - '**.puml'
+      - 'preamble.tex'
+      - 'Makefile'
+      - '.github/workflows/build.yml'
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:  # ручной запуск
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # --- Java для PlantUML ---
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # --- Генерация TikZ из PlantUML ---
+      - name: Generate figures
+        run: |
+          for f in plantuml/*.puml; do
+            java -jar plantuml-mit-1.2026.8.jar -tlatex:nopreamble "$f"
+          done
+
+      # --- Сборка LaTeX через xu-cheng/latex-action ---
+      - name: Compile LaTeX
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: main.tex
+          latexmk_use_xelatex: true
+          latexmk_shell_escape: false
+          # Если нужны доп. пакеты — раскомментируйте:
+          # extra_system_packages: "inkscape ghostscript"
+
+      # --- Выгрузка PDF как артефакта ---
+      - name: Upload PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: lecture-notes-pdf
+          path: main.pdf
+          retention-days: 30

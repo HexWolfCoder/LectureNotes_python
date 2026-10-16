@@ -1,8 +1,11 @@
-\section{синопсис}
+\section{Лекция 1. Инструментарий разработчика}
 
-\subsection*{Цель}
+\subsection*{Синопсис}
+\paragraph*{Цель}
+
 Настроить рабочее место, понять, что Python-код живёт в экосистеме.
-\subsection*{Длительность}
+\paragraph*{Длительность}
+
 3–5 дней.
 \paragraph*{Теория (минимум)}
 \begin{itemize}
@@ -11,13 +14,45 @@
 \item python, python3, pip, pipx, uv, poetry.
 \item venv: зачем изоляция зависимостей.
 \item pyproject.toml vs requirements.txt vs setup.py.
-\item Git, .gitignore для Python (.venv, \verb| __pycache__|,  \verb|.pytest_cache|,\verb| *.egg-info|).
+\item Git, .gitignore для Python (.venv, \verb| __pycache__|,  \verb|.pytest_cache|).
 \item Редактор: VS Code + Python extension или PyCharm.
-\item Terminal: bash\/zsh, базовые командыю.
+\item Terminal: bash/zsh, базовые командыю.
 \end{itemize}
-\section{Инструментарий разработчика}
-Python --- интерпретируемый язык.
 
-\subsection{Интерпретатор}
+\subsection{Что такое интерпретатор, REPL, байт-код , \_\_pycache\_\_ }
+\subsubsection{Интерпретатор}
+
+\paragraph*{Python - интерпретируемый язык}
+Это значит, что исходный код \texttt{.py} \textbf{не компилируется} в машинный код (python3) напрямую,  а \textbf{выполняется} специальной программой --- \linebreak интерпретатором.
+Но это упрощение. На самом деле путь такой: (см. Рис.1).
+То есть Python сначала компилирует исходник в байт-код, а потом интерпретирует байт-код виртуальной машиной.
+Поэтому Python иногда называют \textbf{«компилируемо-интерпретируемым»} языком.
+
+Что нужно понимать:
+\begin{itemize}
+\item \textbf{Интерпретатор} — это программа \texttt{python3}, которая читает \texttt{.py}, компилирует в байт-код и выполняет.
+\item \textbf{Интерпретатор} не создаёт \texttt{.exe}/бинарник. Чтобы запустить программу, нужен \linebreak  установленный Python.
+\item \textbf{Python-код} \underline{медленнее} C, потому что каждая операция проходит через PVM.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.65\textwidth}{!}{\input{./figures/01.fig.tex}}
+  \caption{Схема обработки и выполнения программы на Python}
+  \label{fig:python-pipeline}
+\end{figure}
+
+
+\paragraph*{Интерпретатор}
 
 Исходный код \texttt{.py} компилируется в байт-код.
+
+\subsubsection{REPL}
+
+\textbf{REPL = Read-Eval-Print Loop}. Это интерактивный режим интерпретатора.
+
+\begin{lstlisting}
+def main() -> None:
+    print("Hello")
+\end{lstlisting}
+

@@ -1,0 +1,18 @@
+@startuml
+skinparam backgroundColor transparent
+skinparam defaultFontName "Computer Modern"
+skinparam shadowing false
+skinparam dpi 300
+
+title Схема обработки и выполнения программы на Python
+
+(*) --> "source.py\n(исходный текст)"
+--> "Лексер / Парсер"
+--> "AST\n(абстрактное синтаксическое дерево)"
+--> "Компилятор"
+--> "Байт-код"
+--> "Виртуальная машина Python\n(PVM)"
+--> "Выполнение программы"
+--> (*)
+
+@enduml
