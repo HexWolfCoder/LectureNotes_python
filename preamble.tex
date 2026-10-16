@@ -1,9 +1,20 @@
 % --- Шрифты (XeLaTeX) ---
+\usepackage{iftex}
 \usepackage{fontspec}
-\setmainfont{Times New Roman}
-\setsansfont{Times New Roman}
-\setmonofont{Courier New}       % или Courier New / DejaVu Sans Mono
 
+\ifxetex
+  \IfFontExistsTF{Times New Roman}{
+    \setmainfont{Times New Roman}
+    \setsansfont{Times New Roman}
+    \setmonofont{Courier New}
+  }{
+    \setmainfont{Liberation Serif}
+    \setsansfont{Liberation Sans}
+    \setmonofont{Liberation Mono}
+  }
+\else
+  \PackageError{preamble}{This document requires XeLaTeX}{}
+\fi
 % --- Графика и TikZ ---
 \usepackage{graphicx}
 \usepackage{tikz}

@@ -219,33 +219,36 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-#LaTeX
-
-# LaTeX вспомогательные файлы
+# LaTeX artifacts
 *.aux
 *.log
-*.out
 *.toc
+*.out
 *.lof
 *.lot
-*.fls
-*.fdb_latexmk
 *.synctex.gz
-*.synctex
+*.pytxcode
+*.fdb_latexmk
+*.fls
 *.bbl
 *.blg
 *.bcf
 *.run.xml
+*.synctex
+missfont.log
 
-# Скомпилированный PDF (опционально)
-# *.pdf
-
-# Редакторы
-.vscode/
-.idea/
-*.swp
+# PDF
+*.pdf
+*.xdv
 
 # PlantUML generated
 plantuml/*.png
 plantuml/*.tex
 !plantuml/*.puml
+
+# Editor
+*.swp
+*~
+
+# Java
+*.part
