@@ -1,0 +1,11 @@
+@startuml
+skinparam folderStyle modern
+
+folder ".project" {
+    file "module.py" as module
+
+    folder "_ _pycache_ _" {
+        file "module.cpython-312.pyc" as pyc
+    }
+}
+@enduml

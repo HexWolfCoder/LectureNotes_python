@@ -124,23 +124,25 @@ dis.dis(add)
 \subsubsection{\_\_pycache\_\_ и .pyc}
 
 Когда Python импортирует модуль, он кэширует скомпилированный байт-код в файлы .pyc, чтобы не компилировать заново при следующем запуске
-\begin{lstlisting}
-.project/
-├── module.py
-└── \_\_pycache\_\_/
-    └── module.cpython-312.pyc
-\end{lstlisting}
+\begin{figure}[htbp]
+  \centering
+  \resizebox{0.65\textwidth}{!}{\input{./figures/02.fig.tex}}
+  \caption{байт-код \_\_pycache\_\_ и .pyc}
+  \label{fig:.байт-код и .pyc}
+\end{figure}
 
-Имя \texttt{.pyc: module.<interpreter>-<version>.pyc}, например \texttt{ module.cpython-312.pyc}.
+Имя \texttt{.pyc: module.<interpreter>-<version>.pyc}, 
 
-Когда создаётся:
+например \texttt{ module.cpython-312.pyc}.
+
+\textbf{Когда создаётся:}
 \begin{itemize}
 \item При import module.
 \item Не создаётся для скрипта, запущенного как python script.py (главный модуль не кэшируется).
 \item Можно отключить: python -B script.py или PYTHONDONTWRITEBYTECODE=1.
 \end{itemize}
 
-Что нужно понимать:
+\textbf{Что нужно понимать:}
 \begin{itemize}
 \item \texttt{ \_\_pycache\_\_} — артефакт, его не коммитят в git.
 \item \texttt{.pyc} ускоряет повторные импорты.
@@ -175,69 +177,81 @@ Python 2 вышел в 2000, Python 3 — в 2008. Это несовместим
 \textbf{Ключевые различия:}
 \begin{table}[h]
 \centering
-\begin{tabular}{|l|l|}
+\begin{tabular}{|l|l|l|}
 \hline
-\textbf{Версия} & \textbf{Особенность} \\
+\textbf{Аспект}& \textbf{Python 2} & \textbf{Python 3} \\
 \hline
-3.10 & match/case, \texttt{X | Y} в типах \\
-3.11 & Быстрее на 10--60\% \\
-3.12 & Ещё быстрее, новый синтаксис \texttt{type} \\
+print & оператор print "hi" & функция print("hi") \\
+Строки & str (bytes) + unicode & str (unicode) + bytes \\
+Деление & 5/2 == 2 & 5/2 == 2.5, 5//2 == 2 \\
+range & список & ленивый объект \\
+input & eval ввода & строка \\
+Unicode & по умолчанию нет & по умолчанию да \\
+Поддержка & EOL 2020 & активная \\
 \hline
 \end{tabular}
-\caption{Актуальные версии Python}
-\label{tab:python-versions}
+\caption{Ключевый различия}
 \end{table}
 
-АспектPython 2Python 3printоператор print "hi"функция print("hi")Строкиstr (bytes) + unicodestr (unicode) + bytesДеление5/2 == 25/2 == 2.5, 5//2 == 2rangeсписокленивый объектinputeval вводастрокаUnicodeпо умолчанию нетпо умолчанию даПоддержкаEOL 2020активная
+\textbf{Почему не 2.x:}
+\begin{itemize}
+\item Нет обновлений безопасности.
+\item Большинство библиотек (numpy, pandas, fastapi, requests) уже не поддерживают 2.x.
+\item Синтаксис 3 чище.
+\item Python 2 несовместим с современным тулингом.
+\end{itemize}
 
-Почему не 2.x:
-Нет обновлений безопасности.
-Большинство библиотек (numpy, pandas, fastapi, requests) уже не поддерживают 2.x.
-Синтаксис 3 чище.
-Python 2 несовместим с современным тулингом.
+\subsubsection{ Какие версии актуальны}
+\begin{itemize}
+\item 3.10 — минимум для большинства современных проектов (match/case, X | Y в типах).
+\item 3.11 — быстрее (~10–60%), TaskGroup, tomllib, лучшие сообщения об ошибках.
+\item 3.12 — ещё быстрее, type statement, улучшенный f-string.
+\item 3.13 — экспериментальный JIT, улучшенный REPL, free-threaded (без GIL) — пока не для продакшена.
+\end{itemize}
 
-2.2. Какие версии актуальны
-
-3.10 — минимум для большинства современных проектов (match/case, X | Y в типах).
-3.11 — быстрее (~10–60%), TaskGroup, tomllib, лучшие сообщения об ошибках.
-3.12 — ещё быстрее, type statement, улучшенный f-string.
-3.13 — экспериментальный JIT, улучшенный REPL, free-threaded (без GIL) — пока не для продакшена.
-
+\begin{warningbox2}
 Рекомендация: целевая версия — 3.11 или 3.12. Минимум — 3.10.
+\end{warningbox2}
 
-2.3. Что нужно понимать
-Указывай requires-python = ">=3.11" в pyproject.toml.
-Используй python3.12 явно, если нужно.
-Не пиши код, который работает только на одной версии, без причины.
-Проверяй версию: python3 --version.
-
-2.4. Что проверить руками
-
+\subsubsection{Что нужно понимать}
+\begin{itemize}
+\item Указывай requires-python = ">=3.11" в pyproject.toml.
+\item Используй python3.12 явно, если нужно.
+\item Не пиши код, который работает только на одной версии, без причины.
+\item Проверяй версию: python3 --version.
+\end{itemize}
+\subsubsection{Что проверить руками}
+\begin{lstlisting}
 python3 --version
 python3 -c "import sys; print(sys.version_info)"
-# Проверка новых фич
+# Проверка  новых  фич
 
 python3 -c "match 1:
     case 1: print('one')"
+\end{lstlisting}
 
-3. python, python3, pip, pipx, uv, poetry
-3.1. python vs python3
+%3 part
+\subsection{ python, python3, pip, pipx, uv, poetry}
+\subsubsection{python vs python3}
+\begin{itemize}
+\item python3 — гарантированно Python 3 на Linux/macOS.
+\item python — может быть Python 2, а может не быть вообще.
+\item На Windows python — обычно Python 3 (если установлен).
+\item Правило: всегда используй python3 в скриптах и документации для Linux/macOS.
+\end{itemize}
 
-python3 — гарантированно Python 3 на Linux/macOS.
-python — может быть Python 2, а может не быть вообще.
-На Windows python — обычно Python 3 (если установлен).
-Правило: всегда используй python3 в скриптах и документации для Linux/macOS.
-
-Проверка:
-
+\textbf{Проверка:}
+\begin{lstlisting}
 which python3
 which python
 python3 --version
+\end{lstlisting}
 
-3.2. pip
+\subsubsection{pip}
 
 pip = Pip Installs Packages. Менеджер пакетов Python.
 
+\begin{lstlisting}
 pip install requests
 pip install "requests>=2.31,<3"
 pip install -e .                    # editable install
@@ -246,35 +260,46 @@ pip list
 pip show requests
 pip uninstall requests
 pip freeze > requirements.txt
+\end{lstlisting}
 
-Важно: pip — это не «системный» установщик. Он ставит пакеты в текущее окружение. Без venv — в глобальное, что плохо.
+\begin{warningbox2}
+\textbf{Важно}: pip — это не «системный» установщик. Он ставит пакеты в текущее окружение. Без venv — в глобальное, что плохо.
+\end{warningbox2}
 
-Правило: всегда активируй venv перед pip install.
+\textbf{Правило}: всегда активируй venv перед pip install.
 
-Альтернативы:
+\textbf{Альтернативы:}
+\begin{itemize}
+\item python3 -m pip — гарантирует, что pip от нужного Python.
+\item pip3 — явный Python 3.
+\end{itemize}
 
-python3 -m pip — гарантирует, что pip от нужного Python.
-pip3 — явный Python 3.
+\subsubsection{pipx}
+pipx = pip + изоляция. Устанавливает приложения (CLI-утилиты) в изолированные окружения и добавляет их в PATH.
+\begin{lstlisting}
+\item pipx install ruff
+\item pipx install poetry
+\item pipx install black
+\item pipx list
+\item pipx upgrade ruff
+\item pipx uninstall ruff
+\end{lstlisting}
 
-3.3. pipxpipx = pip + изоляция. Устанавливает приложения (CLI-утилиты) в изолированные окружения и добавляет их в PATH.
+\textbf{Когда использовать:}
+\begin{itemize}
+\item Устанавливаешь CLI-инструмент (ruff, black, poetry, httpie).
+\item Не хочешь засорять глобальный site-packages.
+\item Нужны разные версии инструмента в разных проектах.
+\end {itemize}
 
-pipx install ruff
-pipx install poetry
-pipx install black
-pipx list
-pipx upgrade ruff
-pipx uninstall ruff
+\textbf {Когда не использовать:}
+\begin{itemize}
+\item Устанавливаешь библиотеку для проекта — тогда pip + venv.
+\end{itemize}
 
-Когда использовать:
-Устанавливаешь CLI-инструмент (ruff, black, poetry, httpie).
-Не хочешь засорять глобальный site-packages.
-Нужны разные версии инструмента в разных проектах.
-
-Когда не использовать:
-Устанавливаешь библиотеку для проекта — тогда pip + venv.
-
-3.4. uvuv — сверхбыстрый менеджер пакетов и окружений от Astral (создатели ruff). Написан на Rust.
-
+\subsubsection{uv}
+uv — сверхбыстрый менеджер пакетов и окружений от Astral (создатели ruff). Написан на Rust.
+\begin{lstlisting}
 # Установка
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
@@ -295,16 +320,21 @@ uv add --dev pytest
 uv sync
 uv run python main.py
 uv lock
+\end{lstlisting}
 
-Преимущества:
-В 10–100 раз быстрее pip.Единый инструмент: venv + pip + lock + resolver.
-Совместим с pyproject.toml.
-Кэширует агрессивно.
-
+\textbf{Преимущества:}
+\begin{itemize}
+\item В 10–100 раз быстрее pip.Единый инструмент: venv + pip + lock + resolver.
+\item Совместим с pyproject.toml.
+\item Кэширует агрессивно.
+\end{itemize}
+\begin{warningbox2}
 Рекомендация: для новых проектов — uv. Для legacy — pip.
+\end{warningbox2}
 
-3.5. poetryPoetry — менеджер зависимостей и упаковки. Более старый, чем uv, но зрелый.
-
+\subsubsection{poetry}
+Poetry — менеджер зависимостей и упаковки. Более старый, чем uv, но зрелый.
+\begin{lstlisting}
 pipx install poetry
 poetry new myproject
 cd myproject
@@ -314,21 +344,40 @@ poetry install
 poetry run python main.py
 poetry build
 poetry publish
+\end{lstlisting}
 
-Плюсы:
+\textbf{Плюсы:}
+\begin{itemize}
+\item Единый pyproject.toml + poetry.lock.
+\item Хорошая работа с версиями.
+\item Упаковка и публикация.
+\end{itemize}
 
-Единый pyproject.toml + poetry.lock.
-Хорошая работа с версиями.
-Упаковка и публикация.
+\textbf{Минусы:}
+\begin{itemize}
+\item Медленнее uv.
+\item Свой формат секций в pyproject.toml.
+\end{itemize}
 
-Минусы:
-Медленнее uv.
-Свой формат секций в pyproject.toml.
+\subsubsection{Сравнение}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+Инструмент & Назначение & Скорость & Когда использовать \\
+\hline
+pip & установка пакетов & средняя & legacy, простые случаи\\
+pipx & CLI-приложения & средняя & ruff, black, poetry\\
+uv & всё & очень высокая & новые проекты\\
+poetry & зависимости + упаковка & средняя & legacy, публикация\\
+\hline
+\end{tabular}
+\caption{Сравнение}
+\end{table}
 
-3.6. СравнениеИнструментНазначениеСкоростьКогда использоватьpipустановка пакетовсредняяlegacy, простые случаиpipxCLI-приложениясредняяruff, black, poetryuvвсёочень высокаяновые проектыpoetryзависимости + упаковкасредняяlegacy, публикация
 
-3.7. Что проверить руками
-
+\subsubsection{Что проверить руками}
+\begin{lstlisting}
 python3 --version
 python3 -m pip --version
 pipx --version
@@ -339,592 +388,4 @@ poetry --version
 uv init /tmp/uvtest && cd /tmp/uvtest
 uv add requests
 uv run python -c "import requests; print(requests.__version__)"
-
-4. venv: зачем изоляция зависимостей
-4.1. Проблема
-Представь: у тебя два проекта.Проект A требует requests==2.28.Проект B требует requests==2.31.Если ставить глобально — конфликт. Один проект сломается.
-Решение: виртуальное окружение — изолированная папка с собственным site-packages.
-
-4.2. Как работает
-python3 -m venv .venv
-source .venv/bin/activate       # Linux/macOS
-# или
-.venv\Scripts\activate           # Windows
-
-# Теперь python и pip указывают на .venv
-which python                     # /path/to/.venv/bin/python
-pip install requests             # ставится в .venv/lib/.../site-packages
-
-deactivate                       # выйтиЧто создаётся:.venv/
-├── bin/                  # python, pip, activate
-├── lib/
-│   └── python3.12/
-│       └── site-packages/   # сюда ставятся пакеты
-└── pyvenv.cfg
-
-Ключевое: activate меняет PATH и VIRTUAL_ENV, чтобы python и pip указывали на .venv.
-
-4.3. Правила
-Один venv на проект.
-Не коммитить .venv — добавить в .gitignore.
-Не создавать venv внутри venv.
-Удалять venv безопасно — просто rm -rf .venv.
-Фиксировать зависимости — requirements.txt или uv.lock/poetry.lock.
-
-4.4. Альтернативы
-virtualenv — старее, быстрее для Python 2.
-conda — для data science, управляет и не-Python зависимостями.
-uv venv — быстрее.
-poetry shell — активирует venv проекта.
-
-4.5. Что проверить руками
-
-mkdir /tmp/venvtest && cd /tmp/venvtest
-python3 -m venv .venv
-source .venv/bin/activate
-which python
-pip install requests
-pip list
-python -c "import requests; print(requests.__file__)"
-deactivate
-
-5. pyproject.toml vs requirements.txt vs setup.py
-5.1. setup.py (legacy)
-Исторический способ. Исполняемый Python-файл.
-
-from setuptools import setup, find_packages
-
-setup(
-    name="myproject",
-    version="0.1.0",
-    packages=find_packages(),
-    install_requires=["requests>=2.31"],
-)
-
-Проблемы:
-Исполняемый код при установке — небезопасно.
-Нельзя прочитать метаданные без запуска.
-Дублирование с setup.cfg.
-
-Статус: deprecated, но ещё встречается в legacy-проектах.
-
-5.2. requirements.txt
-
-Простой список зависимостей.
-
-requests==2.31.0
-httpx>=0.27,<1
-pydantic~=2.6
-
-Плюсы:
-Просто.
-Понятно.
-Работает везде.
-
-Минусы:
-Нет метаданных проекта (имя, версия, entry points).
-Нет разделения на prod/dev (обычно делают requirements-dev.txt).
-Нет lock-файла (нужен pip-tools или pip freeze).
-
-Когда использовать:
-Простые проекты.
-Legacy.
-Docker-образы (иногда).
-
-5.3. pyproject.toml (современный стандарт)
-
-PEP 518 / PEP 621.
-Единый файл конфигурации проекта.
-
-[build-system]
-requires = ["setuptools>=68", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "myproject"
-version = "0.1.0"
-description = "My project"
-readme = "README.md"
-requires-python = ">=3.11"
-license = {text = "MIT"}
-authors = [{name = "Ivan", email = "ivan@example.com"}]
-dependencies = [
-    "requests>=2.31",
-    "pydantic>=2.6",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=8.0",
-    "ruff>=0.4",
-    "mypy>=1.10",
-]
-
-[project.scripts]
-myproject = "myproject.cli:main"
-
-[tool.ruff]
-line-length = 100
-
-[tool.mypy]
-strict = true
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-
-Плюсы:
-Единое место для метаданных и настроек инструментов.
-Декларативный.
-Совместим с pip, uv, poetry, hatch, pdm.
-Lock-файлы (uv.lock, poetry.lock) дополняют.
-
-Минусы:
-Сложнее для новичка.
-Разные бэкенды (setuptools, hatchling, flit, poetry-core).
-
-Когда использовать: всегда в новых проектах.
-
-5.4. Сравнение
-ФайлНазначениеСтатусsetup.pyсборка/установкаlegacyrequirements.txtсписок зависимостейактуален для простых случаевpyproject.tomlвсё: метаданные, зависимости, настройкисовременный стандартuv.lock / poetry.lockточные версии всех зависимостейобязателен для воспроизводимости
-
-5.5. Что проверить руками
-
-mkdir /tmp/pyproj && cd /tmp/pyproj
-cat > pyproject.toml <<'EOF'
-[project]
-name = "demo"
-version = "0.1.0"
-requires-python = ">=3.11"
-dependencies = ["requests"]
-EOF
-
-python3 -m pip install -e .
-python3 -c "import demo"  # если есть пакет
-
-6. Git, .gitignore для Python
-6.1. Базовый workflow
-
-git init
-git add .
-git commit -m "Initial commit"
-git status
-git log --oneline
-git diff
-git branch feature/x
-git checkout feature/x
-git merge feature/x
-
-6.2. .gitignore для Python
-
-Что не коммитить:
-
-# Виртуальные окружения
-.venv/
-venv/
-env/
-ENV/
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
-# Сборка
-build/
-dist/
-*.egg-info/
-*.egg
-.eggs/
-
-# Тесты и кэш
-.pytest_cache/
-.coverage
-.coverage.*
-htmlcov/
-.tox/
-.nox/
-.hypothesis/
-
-# Типы
-.mypy_cache/
-.pytype/
-.ruff_cache/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Env-файлы (секреты!)
-.env
-.env.*
-!.env.example
-
-# Логи
-*.log
-
-Важно:
-Секреты (.env, токены, ключи) — никогда в git.
-Вместо .env коммитить .env.example с пустыми значениями.
-.venv — всегда игнорировать.
-__pycache__ — всегда игнорировать.
-
-6.3. Проверка перед коммитом
-
-git status --ignored
-git check-ignore -v .venv/
-git ls-files | grep -E "(__pycache__|\.venv|\.env$)"Если что-то лишнее попало — удалить из индекса:git rm -r --cached .venv
-git rm --cached .env6.4. Полезные алиасыgit config --global alias.st status
-git config --global alias.co checkout
-git config --global alias.br branch
-git config --global alias.lg "log --oneline --graph --all"6.5. Что проверить рукамиmkdir /tmp/gittest && cd /tmp/gittest
-git init
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -c "print('hello')" > main.py
-python3 main.py
-python3 -c "import main" 2>/dev/null; ls __pycache__ 2>/dev/null
-
-# Создать .gitignore, проверить
-echo ".venv/" > .gitignore
-echo "__pycache__/" >> .gitignore
-git add .
-git status
-
-7. Редактор: VS Code + Python extension или PyCharm
-7.1. VS Code
-
-Плюсы:
-Бесплатный, лёгкий, кроссплатформенный.
-Огромная экосистема расширений.
-Отличная поддержка Python.
-Работает с любым venv.
-
-Обязательные расширения:
-Python (Microsoft) — IntelliSense, отладка, Jupyter, тесты.
-Pylance — быстрый language server, типы.
-Ruff — линтер + форматтер.
-Mypy Type Checker — проверка типов.
-Even Better TOML — для pyproject.toml.
-GitLens — история git.
-Error Lens — ошибки прямо в строке.
-Настройки (.vscode/settings.json):
-{
-  "python.defaultInterpreterPath": ".venv/bin/python",
-  "python.analysis.typeCheckingMode": "strict",
-  "editor.formatOnSave": true,
-  "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    }
-  },
-  "python.testing.pytestEnabled": true,
-  "python.testing.pytestArgs": ["tests"]
-}Отладка (launch.json):{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Python: Current File",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal",
-      "justMyCode": true
-    }
-  ]
-}
-Плюсы VS Code:
-Лёгкий.
-Гибкий.
-Отличная поддержка Python.
-Бесплатный.
-
-Минусы:
-Нужно настраивать расширения.
-Иногда конфликты между расширениями.
-
-7.2. PyCharm
-Плюсы:
-Мощный из коробки.
-Отличный рефакторинг.
-Встроенная поддержка venv, poetry, uv.
-Профессиональный debugging.
-Database tools (в Professional).
-Scientific mode (Professional).
-Версии:
-Community — бесплатная, для чистого Python.
-Professional — платная, для web (Django, Flask, FastAPI), БД, science.
-
-Настройки:
-File → Settings → Project → Python Interpreter → выбрать .venv.
-Settings → Tools → Ruff / Black.
-Settings → Editor → Inspections → MyPy.
-Плюсы PyCharm:
-«Всё из коробки».
-Мощный рефакторинг.
-Отличная навигация.
-
-Минусы:
-Тяжёлый (много RAM).
-Медленный старт.
-Professional платный.
-
-7.3. Что выбратьКритерийVS CodePyCharmВеслёгкийтяжёлый
-Настройкавручнуюиз коробкиРефакторингхорошоотличноОтладкахорошоотличноЦенабесплатноCommunity бесплатно, Pro платноДля новичкахорошоотличноДля профиотличноотлично
-
-Рекомендация:
-Новичку — VS Code (лёгкий, бесплатный, учит настраивать).
-Профи — PyCharm Professional (если есть бюджет) или VS Code.
-
-7.4. Что проверить руками
-
-VS Code:
-
-code --install-extension ms-python.python
-code --install-extension ms-python.vscode-pylance
-code --install-extension charliermarsh.ruff
-code --install-extension ms-python.mypy-type-checker
-
-Открыть проект, выбрать интерпретатор .venv, поставить breakpoint, запустить F5.
-PyCharm:
-File → Settings → Project → Python Interpreter → Add → Existing → .venv/bin/python.
-Run → Edit Configurations → Python → указать скрипт.
-
-8. Terminal: bash/zsh, базовые команды
-8.1. Что такое shell
-
-Shell — программа, которая читает команды и запускает процессы.
-bash — Bourne Again Shell, стандарт на Linux.
-zsh — Z Shell, стандарт на macOS, мощнее bash.
-fish — дружелюбный, но не POSIX.
-sh — минимальный POSIX shell.
-
-Проверка:
-
-echo $SHELL
-echo $0
-
-8.2. Базовые команды
-
-Навигация:
-pwd                 # текущая директория
-cd /path            # перейти
-cd ..               # на уровень выше
-cd ~                # в домашнюю
-cd -                # в предыдущую
-ls                  # список файлов
-ls -la              # с деталями и скрытыми
-tree                # дерево (если установлено)Файлы:touch file.txt
-mkdir -p a/b/c
-cp file.txt copy.txt
-cp -r dir/ dir2/
-mv file.txt new.txt
-rm file.txt
-rm -rf dir/
-cat file.txt
-less file.txt
-head -n 20 file.txt
-tail -n 20 file.txt
-tail -f log.txtПоиск:grep "pattern" file.txt
-grep -r "pattern" .
-find . -name "*.py"
-find . -type f -size +1M
-which python3
-whereis python3Права:chmod +x script.sh
-chmod 644 file.txt
-chown user:group file.txtПроцессы:ps aux
-top
-htop
-kill PID
-kill -9 PID
-pkill -f "python"Сеть:curl https://example.com
-wget https://example.com/file
-ping google.com
-nc -zv localhost 8080
-ss -tulnПайпы и редиректы:ls | grep ".py"
-cat file.txt | wc -l
-echo "hello" > file.txt
-echo "world" >> file.txt
-command 2>&1 | tee log.txtПеременные:export MY_VAR=value
-echo $MY_VAR
-env
-unset MY_VAR
-
-История:
-
-history
-!123                # выполнить команду №123
-!!                  # предыдущая
-Ctrl+R              # поиск по историиСпециальные:Ctrl+C              # прервать
-Ctrl+D              # EOF / выход
-Ctrl+Z              # приостановить (fg, bg)
-Ctrl+L              # очистить экран
-Tab                 # автодополнение8.3. Полезные настройкиbash (~/.bashrc):alias ll='ls -la'
-alias gs='git status'
-alias gp='git pull'
-alias venv='python3 -m venv .venv && source .venv/bin/activate'
-export EDITOR=vim
-export PYTHONDONTWRITEBYTECODE=1zsh (~/.zshrc):alias ll='ls -la'
-alias gs='git status'
-export EDITOR=vim
-
-Применить:
-
-source ~/.bashrc
-# или
-source ~/.zshrc
-
-8.4. Python-специфичные команды
-
-# Активация venv
-source .venv/bin/activate
-
-# Проверка, что python из venv
-which python
-python -c "import sys; print(sys.prefix)"
-
-# Запуск модуля
-python -m pytest
-python -m mypy src/
-python -m ruff check .
-
-# Отладка
-python -m pdb script.py
-python -X dev script.py     # dev mode
-python -X faulthandler script.py8.5. Что проверить руками# Создать структуру
-mkdir -p /tmp/termtest/{src,tests}
-cd /tmp/termtest
-touch README.md src/main.py tests/test_main.py
-
-# Навигация
-pwd
-ls -la
-tree
-
-# Поиск
-find . -name "*.py"
-grep -r "main" .
-
-# Пайпы
-find . -name "*.py" | wc -l
-find . -name "*.py" | xargs wc -l
-
-# Процессы
-ps aux | grep python
-
-# История
-history | tail -209.
-
-Итоговая шпаргалка: что нужно уметь после Лекции 0
-
-Понимать:
-Как Python превращает .py в байт-код и выполняет его.
-Зачем нужен REPL и когда его использовать.
-Что такое __pycache__ и почему его не коммитят.
-Почему Python 2 мёртв и какие версии актуальны.
-Разницу между python, python3, pip, pipx, uv, poetry.
-Зачем изоляция зависимостей и как работает venv.
-Разницу между setup.py, requirements.txt, pyproject.toml.
-Что не коммитить в git (.venv, __pycache__, .env).
-Как настроить VS Code или PyCharm под Python.
-Базовые команды терминала.
-
-Уметь:
-Создать venv, активировать, установить пакет, деактивировать.
-Создать pyproject.toml с зависимостями.
-Установить проект в editable-режиме (pip install -e .).
-Настроить .gitignore для Python.
-Сделать первый коммит.
-Запустить Python-скрипт и REPL.
-Посмотреть байт-код через dis.
-Найти файл через find, строку через grep.
-Работать с пайпами и редиректами.
-
-Проверить руками (минимальный чек-лист):
-
-mkdir /tmp/checkpoint0 && cd /tmp/checkpoint0
-python3 -m venv .venv
-source .venv/bin/activate
-python3 --version
-pip install --upgrade pip
-pip install requests
-python3 -c "import requests; print(requests.__version__)"
-deactivate
-
-git init
-cat > .gitignore <<'EOF'
-.venv/
-__pycache__/
-*.pyc
-.env
-EOF
-
-cat > main.py <<'EOF'
-def main() -> None:
-    print("Hello, World!")
-
-if __name__ == "__main__":
-    main()
-EOF
-
-python3 main.py
-git add .
-git commit -m "Initial commit"
-git log --oneline10. 
-
-Что читать дальше
-
-PEP 8 — стиль кода.
-PEP 484 — типы.
-PEP 517/518/621 — pyproject.toml.
-PEP 405 — venv.
-Python docs: Tutorial — https://docs.python.org/3/tutorial/Real Python — практические статьи.
-Python Packaging User Guide — https://packaging.python.org/
-Этот конспект — фундамент. 
-Дальше каждый этап будет опираться на эти понятия: venv, pyproject.toml, git, ruff, mypy. 
-Если что-то непонятно — вернись к соответствующему разделу и проверь руками.
-
-ПРАКТИКА:
-
-Задача 0.1. hello с правильным окружением
-L1 — работает:
-mkdir hello && cd hello
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip# hello.py
-def main() -> None:
-    print("Hello, World!")
-
-if __name__ == "__main__":
-    main()python hello.py
-
-L2 — инженерный:pyproject.toml:
-[project]
-name = "hello"
-version = "0.1.0"
-requires-python = ">=3.10"
-
-[tool.ruff]
-line-length = 100
-
-[tool.mypy]
-strict = true.gitignore для Python.git init, первый коммит.
-
-L3 — production-minded:
-CI (GitHub Actions): запуск ruff, mypy, pytest на push.
-README с инструкцией.Что переиспользуем дальше: структуру проекта, pyproject.toml, CI.
-
-Типичные ошибки:
-Ставить пакеты глобально, а не в venv
-.Коммитить .venv.
-Использовать python вместо python3 на Linux.
+\end{lstlisting}
