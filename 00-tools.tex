@@ -389,3 +389,57 @@ uv init /tmp/uvtest && cd /tmp/uvtest
 uv add requests
 uv run python -c "import requests; print(requests.__version__)"
 \end{lstlisting}
+
+\subsection{venv: зачем изоляция зависимостей}
+\subsubsection{ Проблема}
+
+\textbf{Представь:} у тебя два проекта. Проект A требует requests==2.28.Проект B требует requests==2.31.Если ставить глобально — конфликт. Один проект сломается.
+Решение: виртуальное окружение — изолированная папка с собственным site-packages.
+
+\subsubsection{ Как работает}
+\begin{lstlisting}
+python3 -m venv .venv
+source .venv/bin/activate 			# Linux/macOS
+# или
+.venv\Scripts\activate 					# Windows
+
+#Теперь python и pip указывают  на .venv
+which python 								# /path/to/.venv/bin/python
+pip install requests 						# ставится в .venv/lib/.../site-packages
+\end{lstlisting}
+\begin{figure}[htbp]
+  \resizebox{0.35\textwidth}{!}{\input{./figures/03.fig.tex}}
+  \caption{Что создаётся:}
+  \label{fig:python-pipeline}
+\end{figure}
+
+\textbf{Ключевое:} \texttt{activate} меняет \verb|PATH| и \verb|VIRTUAL_ENV|, чтобы python и pip указывали на \texttt{.venv.}
+
+\subsubsection{ Правила}
+\begin{itemize}
+\item Один venv на проект.
+\item Не коммитить .venv — добавить в .gitignore.
+\item Не создавать venv внутри venv.
+\item Удалять venv безопасно — просто rm -rf .venv.
+\item Фиксировать зависимости — requirements.txt или uv.lock/poetry.lock.
+\end{itemize}
+\subsubsection{Альтернативы}
+\begin{itemize}
+\item virtualenv — старее, быстрее для Python 2.
+\item conda — для data science, управляет и не-Python зависимостями.
+\item uv venv — быстрее.
+\item poetry shell — активирует venv проекта.
+\end{itemize}
+\newpage
+\subsubsection{ Что проверить руками}
+
+\begin{lstlisting}
+mkdir /tmp/venvtest && cd /tmp/venvtest
+python3 -m venv .venv
+source .venv/bin/activate
+which python
+pip install requests
+pip list
+python -c "import requests; print(requests.__file__)"
+deactivate
+\end{lstlisting}

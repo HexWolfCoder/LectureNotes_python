@@ -1,0 +1,8 @@
+@startfiles
+/.venv/
+/.venv/bin/
+/.venv/lib/
+/.venv/lib/python3.12/
+/.venv/lib/python3.12/site-packages/
+/.venv/lib/pyvenv.cfg
+@endfiles
