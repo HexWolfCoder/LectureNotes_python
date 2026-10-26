@@ -443,3 +443,145 @@ pip list
 python -c "import requests; print(requests.__file__)"
 deactivate
 \end{lstlisting}
+
+\subsection{ pyproject.toml vs requirements.txt vs setup.py}
+\subsubsection{ setup.py (legacy)}
+
+\textbf{Исторический способ. Исполняемый Python-файл.}
+\begin{lstlisting}
+from setuptools import setup, find_packages
+
+setup(
+    name="myproject",
+    version="0.1.0",
+    packages=find_packages(),
+    install_requires=["requests>=2.31"],
+)
+\end{lstlisting}
+
+\textbf{Проблемы:}
+\begin{itemize}
+\item Исполняемый код при установке — небезопасно.
+\item Нельзя прочитать метаданные без запуска.
+\item Дублирование с setup.cfg.
+\end{itemize}
+
+\textbf{Статус:} deprecated, но ещё встречается в legacy-проектах.
+
+\subsubsection{requirements.txt}
+
+\textbf{Простой список зависимостей.}
+\begin{lstlisting}
+requests==2.31.0
+httpx>=0.27,<1
+pydantic~=2.6
+\end{lstlisting}
+
+\textbf{Плюсы:}
+\begin{itemize}
+\item Просто.
+\item Понятно.
+\item Работает везде.
+\end{itemize}
+
+\textbf{Минусы:}
+\begin{itemize}
+\item Нет метаданных проекта (имя, версия, entry points).
+\item Нет разделения на prod/dev (обычно делают requirements-dev.txt).
+\item Нет lock-файла (нужен pip-tools или pip freeze).
+\end{itemize}
+
+\textbf{Когда использовать:}
+\begin{itemize}
+\item Простые проекты.
+\item Legacy.
+\item Docker-образы (иногда).
+\end {itemize}
+
+\subsubsection{ pyproject.toml (современный стандарт)}
+\textbf{PEP 518 / PEP 621.}
+
+\textbf{Единый файл конфигурации проекта.}
+\begin{lstlisting}
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "myproject"
+version = "0.1.0"
+description = "My project"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Ivan", email = "ivan@example.com"}]
+dependencies = [
+    "requests>=2.31",
+    "pydantic>=2.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+[project.scripts]
+myproject = "myproject.cli:main"
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+\end{lstlisting}
+
+\textbf{Плюсы:}
+\begin{itemize}
+\item Единое место для метаданных и настроек инструментов.
+\item Декларативный.
+\item Совместим с pip, uv, poetry, hatch, pdm.
+\item Lock-файлы (uv.lock, poetry.lock) дополняют.
+\end{itemize}
+\textbf{Минусы:}
+\begin{itemize}
+\item Сложнее для новичка.
+\item Разные бэкенды (setuptools, hatchling, flit, poetry-core).
+\end{itemize}
+\begin{warningbox2}
+\textbf{Когда использовать:} всегда в новых проектах.
+\end{warningbox2}
+\subsubsection{Сравнение}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Файл} & \textbf{Назначение} & textbf{Статус}\\
+\hline
+setup.py & сборка/установка & legacy\\
+requirements.txt & список зависимостей & актуален для простых случаев\\
+pyproject.toml & всё: метаданные, зависимости, настройки & современный стандарт\\
+uv.lock / poetry.lock & точные версии всех зависимостей & обязателен для воспроизводимости\\
+\hline
+\end{tabular}
+\caption{Сравнение}
+\label{tab:differents}
+\end{table}
+\subsubsection{Что проверить руками}
+\begin{lstlisting}
+mkdir /tmp/pyproj && cd /tmp/pyproj
+cat > pyproject.toml <<'EOF'
+[project]
+name = "demo"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["requests"]
+EOF
+
+python3 -m pip install -e .
+python3 -c "import demo"  # если есть пакет
+\end{lstlisting}
