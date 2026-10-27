@@ -585,3 +585,108 @@ EOF
 python3 -m pip install -e .
 python3 -c "import demo"  # если есть пакет
 \end{lstlisting}
+\newpage
+\subsection{ Git, .gitignore для Python}
+\subsubsection{ Базовый workflow}
+\begin{lstlisting}
+git init
+git add .
+git commit -m "Initial commit"
+git status
+git log --oneline
+git diff
+git branch feature/x
+git checkout feature/x
+git merge feature/x
+\end{lstlisting}
+
+\subsubsection{.gitignore для Python}
+
+\textbf{Что не коммитить:}
+\begin{lstlisting}
+# Виртуальные окружения
+.venv/
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Сборка
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Тесты и кэш
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# Типы
+.mypy_cache/
+.pytype/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env-файлы (секреты!)
+.env
+.env.*
+!.env.example
+
+# Логи
+*.log
+\end{lstlisting}
+\begin{warningbox2}
+Важно:
+\begin{itemize}
+\item Секреты (\texttt{.env}, токены, ключи) — никогда в \texttt{git}.
+\item Вместо \texttt{.env} коммитить \texttt{.env.example} с пустыми значениями.
+\item \texttt{.venv} — всегда игнорировать.
+\item \texttt{\_\_pycache\_\_} — всегда игнорировать.
+\end{itemize}
+\end{warningbox2}
+\newpage
+\subsubsection{ Проверка перед коммитом}
+\begin{lstlisting}
+git status --ignored
+git check-ignore -v .venv/
+git ls-files | grep -E "(__pycache__|\.venv|\.env$)"Если что-то лишнее попало — удалить из индекса:git rm -r --cached .venv
+git rm --cached .env6.4. Полезные алиасыgit config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.lg "log --oneline --graph --all"6.5. Что проверить рукамиmkdir /tmp/gittest && cd /tmp/gittest
+git init
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -c "print('hello')" > main.py
+python3 main.py
+python3 -c "import main" 2>/dev/null; ls __pycache__ 2>/dev/null
+
+# Создать .gitignore, проверить
+echo ".venv/" > .gitignore
+echo "__pycache__/" >> .gitignore
+git add .
+git status
+\end{lstlisting}
