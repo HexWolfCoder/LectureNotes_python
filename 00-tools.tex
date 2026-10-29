@@ -842,3 +842,258 @@ File → Settings → Project → Python Interpreter → Add → Existing → .v
 Run → Edit Configurations → Python → указать скрипт.
 \end{lstlisting}
 
+\subsection{Terminal: bash/zsh, базовые команды}
+\subsubsection{ Что такое shell}
+\begin{itemize}
+\item Shell — программа, которая читает команды и запускает процессы.
+\item bash — Bourne Again Shell, стандарт на Linux.
+\item zsh — Z Shell, стандарт на macOS, мощнее bash.
+\item fish — дружелюбный, но не POSIX.
+\item sh — минимальный POSIX shell.
+\end{itemize}
+
+\textbf{Проверка:}
+\begin{lstlisting}
+echo $SHELL
+echo $0
+\end{lstlisting}
+
+\subsubsection{Базовые команды}
+
+\textbf{Навигация:}
+\begin{lstlisting}
+pwd                 # текущая директория
+cd /path            # перейти
+cd ..               # на уровень выше
+cd ~                # в домашнюю
+cd -                # в предыдущую
+ls                  # список файлов
+ls -la              # с деталями и скрытыми
+tree                # дерево (если установлено)Файлы:touch file.txt
+mkdir -p a/b/c
+cp file.txt copy.txt
+cp -r dir/ dir2/
+mv file.txt new.txt
+rm file.txt
+rm -rf dir/
+cat file.txt
+less file.txt
+head -n 20 file.txt
+tail -n 20 file.txt
+tail -f log.txtПоиск:grep "pattern" file.txt
+grep -r "pattern" .
+find . -name "*.py"
+find . -type f -size +1M
+which python3
+whereis python3Права:chmod +x script.sh
+chmod 644 file.txt
+chown user:group file.txtПроцессы:ps aux
+top
+htop
+kill PID
+kill -9 PID
+pkill -f "python"Сеть:curl https://example.com
+wget https://example.com/file
+ping google.com
+nc -zv localhost 8080
+ss -tulnПайпы и редиректы:ls | grep ".py"
+cat file.txt | wc -l
+echo "hello" > file.txt
+echo "world" >> file.txt
+command 2>&1 | tee log.txtПеременные:export MY_VAR=value
+echo $MY_VAR
+env
+unset MY_VAR
+\end{lstlisting}
+
+\textbf{История:}
+\begin{lstlisting}
+history
+!123                # выполнить команду №123
+!!                  # предыдущая
+Ctrl+R              # поиск по историиСпециальные:Ctrl+C              # прервать
+Ctrl+D              # EOF / выход
+Ctrl+Z              # приостановить (fg, bg)
+Ctrl+L              # очистить экран
+Tab                 # автодополнение8.3. Полезные настройкиbash (~/.bashrc):alias ll='ls -la'
+alias gs='git status'
+alias gp='git pull'
+alias venv='python3 -m venv .venv && source .venv/bin/activate'
+export EDITOR=vim
+export PYTHONDONTWRITEBYTECODE=1zsh (~/.zshrc):alias ll='ls -la'
+alias gs='git status'
+export EDITOR=vim
+\end{lstlisting}
+
+\textbf{Применить:}
+\begin{lstlisting}
+source ~/.bashrc
+# или
+source ~/.zshrc
+\end{lstlisting}
+
+\subsection{Python-специфичные команды}
+
+\begin{lstlisting}
+# Активация venv
+source .venv/bin/activate
+
+# Проверка, что python из venv
+which python
+python -c "import sys; print(sys.prefix)"
+
+# Запуск модуля
+python -m pytest
+python -m mypy src/
+python -m ruff check .
+
+# Отладка
+python -m pdb script.py
+python -X dev script.py     # dev mode
+python -X faulthandler script.py8.5. Что проверить руками# Создать структуру
+mkdir -p /tmp/termtest/{src,tests}
+cd /tmp/termtest
+touch README.md src/main.py tests/test_main.py
+
+# Навигация
+pwd
+ls -la
+tree
+
+# Поиск
+find . -name "*.py"
+grep -r "main" .
+
+# Пайпы
+find . -name "*.py" | wc -l
+find . -name "*.py" | xargs wc -l
+
+# Процессы
+ps aux | grep python
+
+# История
+history | tail -209.
+\end{lstlisting}
+
+\textbf{Итоговая шпаргалка: что нужно уметь после Лекции 1}
+
+\textbf{Понимать:}
+\begin{itemize}
+\item Как Python превращает .py в байт-код и выполняет его.
+\item Зачем нужен REPL и когда его использовать.
+\item Что такое \_\_pycache\_\_ и почему его не коммитят.
+\item Почему Python 2 мёртв и какие версии актуальны.
+\item Разницу между python, python3, pip, pipx, uv, poetry.
+\item Зачем изоляция зависимостей и как работает venv.
+\item Разницу между setup.py, requirements.txt, pyproject.toml.
+\item Что не коммитить в git (.venv, __pycache__, .env).
+\item Как настроить VS Code или PyCharm под Python.
+\item Базовые команды терминала.
+\end{itemize}
+
+\textbf{Уметь:}
+\begin{itemize}
+\item Создать venv, активировать, установить пакет, деактивировать.
+\item Создать pyproject.toml с зависимостями.
+\item Установить проект в editable-режиме (pip install -e .).
+\item Настроить .gitignore для Python.
+\item Сделать первый коммит.
+\item Запустить Python-скрипт и REPL.
+\item Посмотреть байт-код через dis.
+\item Найти файл через find, строку через grep.
+\item Работать с пайпами и редиректами.
+\end{itemize}
+
+\textbf{Проверить руками (минимальный чек-лист):}
+\begin{lstlisting}
+mkdir /tmp/checkpoint0 && cd /tmp/checkpoint0
+python3 -m venv .venv
+source .venv/bin/activate
+python3 --version
+pip install --upgrade pip
+pip install requests
+python3 -c "import requests; print(requests.__version__)"
+deactivate
+
+git init
+cat > .gitignore <<'EOF'
+.venv/
+__pycache__/
+*.pyc
+.env
+EOF
+
+cat > main.py <<'EOF'
+def main() -> None:
+    print("Hello, World!")
+
+if __name__ == "__main__":
+    main()
+EOF
+
+python3 main.py
+git add .
+git commit -m "Initial commit"
+git log --oneline10. 
+\end{lstlisting}
+
+\textbf{Что читать дальше}
+\begin{itemize}
+\item PEP 8 — стиль кода.
+\item PEP 484 — типы.
+\item PEP 517/518/621 — pyproject.toml.
+\item PEP 405 — venv.
+\item Python docs: Tutorial — https://docs.python.org/3/tutorial/Real Python — практические статьи.
+\item Python Packaging User Guide — https://packaging.python.org/
+\end{itemize}
+\begin{warningbox2}
+\begin{itemize}
+\item Этот конспект — фундамент. 
+\item Дальше каждый этап будет опираться на эти понятия: venv, pyproject.toml, git, ruff, mypy. 
+\item Если что-то непонятно — вернись к соответствующему разделу и проверь руками.
+\end{itemize}
+\end{warningbox2}
+
+\subsection{ПРАКТИКА:}
+
+\subsubsection{Задача 0.1. hello с правильным окружением}
+
+\textbf{L1 — работает:}
+\begin{lstlisting}
+mkdir hello && cd hello
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip# hello.py
+def main() -> None:
+    print("Hello, World!")
+
+if __name__ == "__main__":
+    main()python hello.py
+\end{lstlisting}
+
+\textbf{L2 — инженерный:pyproject.toml:}
+\begin{lstlisting}
+[project]
+name = "hello"
+version = "0.1.0"
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+strict = true.gitignore для Python.git init, первый коммит.
+\end{lstlisting}
+
+\textbf{L3 — production-minded:}
+\begin{itemize}
+\item CI (GitHub Actions): запуск ruff, mypy, pytest на push.
+\item README с инструкцией.Что переиспользуем дальше: структуру проекта, pyproject.toml, CI.
+\end{itemize}
+
+\textbf{Типичные ошибки:}
+\begin{itemize}
+\item Ставить пакеты глобально, а не в venv
+\item .Коммитить .venv.
+\item Использовать python вместо python3 на Linux.
+\end{itemize}
