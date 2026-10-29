@@ -560,12 +560,12 @@ testpaths = ["tests"]
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{Файл} & \textbf{Назначение} & textbf{Статус}\\
+\textbf{Файл} & \textbf{Назначение} & \textbf{Статус} \\
 \hline
-setup.py & сборка/установка & legacy\\
-requirements.txt & список зависимостей & актуален для простых случаев\\
-pyproject.toml & всё: метаданные, зависимости, настройки & современный стандарт\\
-uv.lock / poetry.lock & точные версии всех зависимостей & обязателен для воспроизводимости\\
+setup.py & сборка/установка & legacy \\
+requirements.txt & список зависимостей & актуален для простых случаев \\
+pyproject.toml & всё: метаданные, зависимости, настройки & современный стандарт \\
+uv.lock / poetry.lock & точные версии всех зависимостей & обязателен для воспроизводимости \\
 \hline
 \end{tabular}
 \caption{Сравнение}
@@ -690,3 +690,155 @@ echo "__pycache__/" >> .gitignore
 git add .
 git status
 \end{lstlisting}
+
+\subsection{ Редактор: VS Code + Python extension или PyCharm}
+\subsubsection{ VS Code}
+
+\textbf{Плюсы:}
+\begin{itemize}
+\item Бесплатный, лёгкий, кроссплатформенный.
+\item Огромная экосистема расширений.
+\item Отличная поддержка Python.
+\item Работает с любым venv.
+\end{itemize}
+
+\textbf{Обязательные расширения:}
+\begin{itemize}
+\item Python (Microsoft) — IntelliSense, отладка, Jupyter, тесты.
+\item Pylance — быстрый language server, типы.
+\item Ruff — линтер + форматтер.
+\item Mypy Type Checker — проверка типов.
+\item Even Better TOML — для pyproject.toml.
+\item GitLens — история git.
+\item Error Lens — ошибки прямо в строке.
+\end{itemize}
+
+\textbf{Настройки} \texttt{(.vscode/settings.json):}
+\begin{lstlisting}
+{
+  "python.defaultInterpreterPath": ".venv/bin/python",
+  "python.analysis.typeCheckingMode": "strict",
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["tests"]
+}Отладка (launch.json):{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}
+\end{lstlisting}
+
+\textbf{Плюсы VS Code:}
+\begin{itemize}
+\item Лёгкий.
+\item Гибкий.
+\item Отличная поддержка Python.
+\item Бесплатный.
+\end{itemize}
+
+\textbf{Минусы:}
+\begin{itemize}
+\item Нужно настраивать расширения.
+\item Иногда конфликты между расширениями.
+\end{itemize}
+
+\subsubsection{PyCharm}
+
+\textbf{Плюсы:}
+\begin{itemize}
+\item Мощный из коробки.
+\item Отличный рефакторинг.
+\item Встроенная поддержка venv, poetry, uv.
+\item Профессиональный debugging.
+\item Database tools (в Professional).
+\item Scientific mode (Professional).
+\end{itemize}
+
+\textbf{Версии:}
+\begin{itemize}
+\item Community — бесплатная, для чистого Python.
+\item Professional — платная, для web (Django, Flask, FastAPI), БД, science.
+\end{itemize}
+
+\textbf{Настройки:}
+\begin{itemize}
+\item File → Settings → Project → Python Interpreter → выбрать .venv.
+\item Settings → Tools → Ruff / Black.
+\item Settings → Editor → Inspections → MyPy.
+\end{itemize}
+\textbf{Плюсы PyCharm:}
+\begin{itemize}
+\item «Всё из коробки».
+\item Мощный рефакторинг.
+\item Отличная навигация.
+\end{itemize}
+\textbf{Минусы}:
+\begin{itemize}
+\item Тяжёлый (много RAM).
+\item Медленный старт.
+\item Professional платный.
+\end{itemize}
+
+\subsubsection{ Что выбрать}
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Критерий} & \textbf{VS Code} & \textbf{PyCharm} \\
+\hline
+Вес & лёгкий & тяжёлый  \\
+Настройка & вручную & из коробки \\
+Рефакторинг & хорошо & отлично \\
+Отладка & хорошо & отлично \\
+Цена & бесплатно & Community бесплатно, Pro платно \\
+Для новичка& хорошо & отлично \\
+Для профи & отлично & отлично\\
+\hline
+\end{tabular}
+\caption{Сравнение VS Code vs PyCharm}
+\label{tab:VSCodeVSPyCharm}
+\end{table}
+
+\begin{warningbox2}
+\textbf{Рекомендация:}
+\begin{itemize}
+\item Новичку — VS Code (лёгкий, бесплатный, учит настраивать).
+\item Профи — PyCharm Professional (если есть бюджет) или VS Code.
+\end{itemize}
+\end{warningbox2}
+
+\subsubsection{ Что проверить руками}
+
+\textbf{VS Code:}
+\begin{lstlisting}
+code --install-extension ms-python.python
+code --install-extension ms-python.vscode-pylance
+code --install-extension charliermarsh.ruff
+code --install-extension ms-python.mypy-type-checker
+\end{lstlisting}
+\begin{itemize}
+\item Открыть проект,
+\item выбрать интерпретатор \texttt{.venv},
+\item поставить breakpoint,
+\item запустить F5.
+\end{itemize}
+\textbf{PyCharm:}
+\begin{lstlisting}
+File → Settings → Project → Python Interpreter → Add → Existing → .venv/bin/python.
+Run → Edit Configurations → Python → указать скрипт.
+\end{lstlisting}
+
